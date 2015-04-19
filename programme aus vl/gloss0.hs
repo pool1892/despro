@@ -2,7 +2,7 @@ module Main (main) where
 
 import Graphics.Gloss
 
-main = display (InWindow "Bsp" (100, 100) (0,0)) white scene
+main = display (InWindow "Bsp" (600, 600) (0,0)) white scene
        
 scene = pictures
         [
