@@ -15,14 +15,26 @@ data Bit = O | I  deriving (Eq, Show)
  -}
 
 encode :: [Either Bool Bool] -> [Bit]
-encode = undefined
-
+encode [] = []
+encode (x:xs) | (Left True == x)= O:I:encode xs
+encode (x:xs) | (Left False == x)= O:O:encode xs
+encode (x:xs) | (Right True == x)= I:I:encode xs
+encode (x:xs) | (Right False == x)= I:O:encode xs
 {- welche aus jeder Liste des Typs [Either Bool Bool] eine Liste des
  - Typs [Bit] macht, sowie eine Funktion:
  -}
 
 decode :: [Bit] -> Maybe [Either Bool Bool]
-decode = undefined
+decode []=Just []
+decode xs |length (xs) `mod`2/=0 = Nothing
+decode xs = Just (decodePair xs)
+
+decodePair:: [Bit] -> [Either Bool Bool]
+decodePair []= []
+decodePair (O:O:xs) = Left False : decodePair xs
+decodePair (O:I:xs) = Left True : decodePair xs
+decodePair (I:I:xs) = Right True : decodePair xs
+decodePair (I:O:xs) = Right False : decodePair xs
 
 {- welche aus jeder Liste des Typs [Bit], die mittels encode erzeugt
  - werden kann, einen Wert 'Just l' macht, wobei l gerade die Ursprungs-
@@ -37,11 +49,11 @@ decode = undefined
  - (lokal aufzurufen als "quickCheck test1" bzw. "quickCheck test2")
  -}
 
-test1 v = decode (encode v) == Just va
+test1 v = decode (encode v) == Just v
 
 test2 c = let mv = decode c 
-          in isJust mv
-             ==> encode (fromJust mv) == c
+           in isJust mv
+               ==> encode (fromJust mv) == c
 
 {- Folgende Typklasseninstanz wird nur benoetigt, um QuickCheck auf
  - die Spruenge zu helfen:

@@ -16,7 +16,7 @@ pairs = [(x,y)|x<-[1..]|y<-[1..]]
 
 -- 3. die Menge aller Tripel von zwei natuerlichen und einer ganzen Zahl.
 triples :: [(Integer,Integer,Integer)]
-triples = undefined
+triples = [(x,y,z)|]
 
 {- 
  - Es sollen also die den wie folgt formulierbaren Tests entsprechenden
