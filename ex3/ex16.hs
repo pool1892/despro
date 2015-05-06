@@ -37,9 +37,9 @@ f (1:[2]) [3] = 6 : f (tail [2]) [0]
 ={applying tail [2]}
 f (1:[2]) [3] = 6 : f ([]) [0]
 ={applying f}
-f (1:[2]) [3] = 6 : f [head [0]][]
+f (1:[2]) [3] = 6 : f [head [0]][]<--------------- WRONG: First list is non empty and thus can be pattern matched...
 ={applying head}
-f (1:[2]) [3] = 6 : f [0][]
+f (1:[2]) [3] = 6 : f [0][]<---------------Ya, does not need to be done...
 ={applying f}
 f (1:[2]) [3] = 6 : if null []
                 then [1]
