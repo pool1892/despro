@@ -1,23 +1,66 @@
-{-
-Im Graphikpaket Gloss werden Animationen als Abbildungen von Zeitpunkten in Bilder ge- fasst.
-type Animation = Float → Picture
-Schreiben Sie zwei Haskell-Funktionen, die Listen solcher Animationen nacheinander anzeigen.
-animateSequenceRel ::[(Animation,Float)]→Animation→Animation animateSequenceAbs :: [ (Animation, Float) ] → Animation → Animation
-Der erste Parameter ist eine Folge von Animationen und ihrer jeweiligen positiven Anzeige- dauer. 
-Die Animationen sollen jeweils fu ̈r diese Dauer nacheinander angezeigt werden. 
-Nach Ablauf aller Animationen in der Liste soll die Animation aus dem zweiten Parameter ge- zeigt werden. 
-In der ersten Funktion sollen die Animationen jeweils zum Zeitpunkt 0 starten,
-wa ̈hrend bei der zweiten Funktion die Animationen den tatsa ̈chlichen Zeitparameter erhalten sollen. 
-Beispielsweise soll animateSequenceAbs (cycle [(clock1,3),(clock2,3)]) undefined alle 3 Sekunden zwischen zwei Uhren wechseln, 
-wobei die angezeigte Zeit weiter voranschreitet. 
-Versuchen Sie mo ̈glichst viel der Implementation der Funktionen animateSequenceRel und animateSequenceAbs zu teilen, statt getrennte Implementationen anzugeben. 
-Idealerweise finden Sie eine Funktion, die beide Funktionalita ̈ten abdeckt und mittels derer Sie obige Funktionen als parametrisierte Aufrufe schreiben ko ̈nnen.
-Geben Sie eine main-Definition an, die eine interessante Verwendung einer der beiden Funk- tionen animateSequenceRel und animateSequenceAbs demonstriert.
--}
 
+import Graphics.Gloss
 
-animateSequenceRel ::[(Animation,Float)]->Animation->Animation
+type Animation = Float -> Picture
 
 
 
- animateSequenceAbs :: [ (Animation, Float) ] -> Animation -> Animation
+animateSequenceRel :: [(Animation, Float)] -> Animation -> Animation
+animateSequenceRel x y= buddy False x y
+
+animateSequenceAbs :: [(Animation, Float)] -> Animation -> Animation
+animateSequenceAbs x y = buddy True x y
+    
+
+
+buddy:: Bool-> [(Animation, Float)] -> Animation -> Animation
+buddy bool x y = dotheanimation bool listicle y
+  where listicle = zip allfirst fixedsecond
+        allfirst= map fst x
+        allsecond= map snd x
+        fixedsecond=  scanl1 (+) allsecond
+
+        
+dotheanimation:: Bool-> [(Animation, Float)] -> Animation -> Animation
+dotheanimation boo x y = foldr (dancing boo) y x 
+
+dancing:: Bool-> (Animation, Float)-> Animation -> Animation
+(dancing bx (erste, zeit) zweite) dauer
+    |dauer< zeit = erste dauer
+    | bx         = zweite dauer
+    | otherwise  = zweite (dauer-zeit)
+
+
+
+
+
+main :: IO()
+main = animate 
+        (InWindow "Wurst" (800, 800) (0, 0))
+        white
+        animation 
+
+
+
+
+animation = animateSequenceRel y clock 
+    where y=cycle [(clock,3)]
+
+clock t = pictures [
+    background,
+    minute t,
+    second t,
+    hour t
+    ]
+background = pictures $ [circleSolid 6,
+              thickCircle 200 5]
+              ++
+              [ rotate (a) (translate 0 190 (rectangleSolid 5 20)) | a <- [0,30..330] ]
+          ++
+          [ rotate (a) (translate 0 180 (rectangleSolid 10 40)) | a <- [0,90..270] ]
+
+    
+minute t =          rotate (fromInteger (180 + 6* floor (t / 60))) (translate 0 100 (rectangleSolid 3 200))
+hour t  =     rotate (fromInteger (75 + 6* floor (t / 3600)))  (translate 0 70 (rectangleSolid 3 140))
+second t =      rotate (fromInteger ((floor t)*6)) (translate 0 100 (rectangleSolid 2 200))
+
