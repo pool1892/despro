@@ -3,6 +3,34 @@ import Graphics.Gloss
 
 type Animation = Float -> Picture
 
+main = animate (InWindow "funsies" (600, 600) (100,200)) white scene
+
+scene = animateSequenceRel clocks funsies
+-- scene = animateSequenceAbs clocks funsies
+-- scene = animateSequenceRel clocksInf funsies
+-- scene = animateSequenceAbs clocksInf funsies
+
+animateSequenceAbs :: [(Animation, Float)] -> Animation -> Animation
+animateSequenceAbs l = animateSequence False (accumulatedList l)
+
+animateSequenceRel :: [(Animation,Float)] -> Animation -> Animation
+animateSequenceRel = animateSequence True
+
+accumulatedList :: [(Animation, Float)] -> [(Animation, Float)]
+accumulatedList l = zip (fst (unzip l)) (scanl1 (+) (snd (unzip l)))
+
+animateSequence :: Bool -> [(Animation, Float)] -> Animation -> Animation
+animateSequence rel list fallback = foldr (animateSequenceSep rel) fallback list
+
+animateSequenceSep :: Bool -> (Animation, Float) -> Animation -> Animation
+animateSequenceSep rel (a1, d) a2 t
+  | t > d     = a2 (if rel then t-d else t)
+  | otherwise = a1 t
+
+
+clocks = [(clock1,5),(clock2,5)]
+clocksInf = cycle clocks
+
 clock1 t = pictures [
   back,
   minute t,
@@ -17,7 +45,6 @@ clock2 t = pictures [
   hour t
   ]
 
-
 back = pictures $ [circleSolid 6,
   thickCircle 200 5]
   ++
@@ -25,36 +52,13 @@ back = pictures $ [circleSolid 6,
   ++
   [ rotate a (translate 0 180 (rectangleSolid 10 40)) | a <- [0,90..270] ]
 
-
 minute t = rotate (fromInteger (180 + 6* floor (t / 60))) (translate 0 100 (rectangleSolid 3 200))
 hour t   = rotate (fromInteger (75 + 6* floor (t / 3600)))  (translate 0 70 (rectangleSolid 3 140))
 second t = rotate (fromInteger (floor t *6)) (translate 0 100 (rectangleSolid 2 200))
 
-main = animate (InWindow "" (600, 600) (100,200)) white spedupFun
 
-
-clocks = [(clock1,3),(clock2,3)]
-clocksInf = cycle clocks
-
-
-scene t = animateSequenceRel clocks fun
-
-animateSequenceRel :: [(Animation,Float)] -> Animation -> Animation
-animateSequenceRel (x:xs) _ = undefined
-animateSequenceRel [] fallback = fallback
-
-animateSequenceAbs :: [(Animation, Float)] -> Animation -> Animation
-animateSequenceAbs = undefined
-
-
-
-
-
-
-
-
-
-fun t = pictures [
+funsies :: Animation
+funsies t = pictures [
     jumprope (5*t),
     translate (-210) 0 stickFigure,
     translate   210  0 stickFigure,
