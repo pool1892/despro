@@ -1,23 +1,73 @@
-{-
-Im Graphikpaket Gloss werden Animationen als Abbildungen von Zeitpunkten in Bilder ge- fasst.
-type Animation = Float → Picture
-Schreiben Sie zwei Haskell-Funktionen, die Listen solcher Animationen nacheinander anzeigen.
-animateSequenceRel ::[(Animation,Float)]→Animation→Animation animateSequenceAbs :: [ (Animation, Float) ] → Animation → Animation
-Der erste Parameter ist eine Folge von Animationen und ihrer jeweiligen positiven Anzeige- dauer. 
-Die Animationen sollen jeweils fu ̈r diese Dauer nacheinander angezeigt werden. 
-Nach Ablauf aller Animationen in der Liste soll die Animation aus dem zweiten Parameter ge- zeigt werden. 
-In der ersten Funktion sollen die Animationen jeweils zum Zeitpunkt 0 starten,
-wa ̈hrend bei der zweiten Funktion die Animationen den tatsa ̈chlichen Zeitparameter erhalten sollen. 
-Beispielsweise soll animateSequenceAbs (cycle [(clock1,3),(clock2,3)]) undefined alle 3 Sekunden zwischen zwei Uhren wechseln, 
-wobei die angezeigte Zeit weiter voranschreitet. 
-Versuchen Sie mo ̈glichst viel der Implementation der Funktionen animateSequenceRel und animateSequenceAbs zu teilen, statt getrennte Implementationen anzugeben. 
-Idealerweise finden Sie eine Funktion, die beide Funktionalita ̈ten abdeckt und mittels derer Sie obige Funktionen als parametrisierte Aufrufe schreiben ko ̈nnen.
-Geben Sie eine main-Definition an, die eine interessante Verwendung einer der beiden Funk- tionen animateSequenceRel und animateSequenceAbs demonstriert.
--}
+module Main where
+import Graphics.Gloss
+
+type Animation = Float -> Picture
+
+clock1 t = pictures [
+  back,
+  minute t,
+  second t,
+  hour t
+  ]
+
+clock2 t = pictures [
+  Color (greyN 0.8) back,
+  minute t,
+  second t,
+  hour t
+  ]
 
 
-animateSequenceRel ::[(Animation,Float)]->Animation->Animation
+back = pictures $ [circleSolid 6,
+  thickCircle 200 5]
+  ++
+  [ rotate a (translate 0 190 (rectangleSolid 5 20)) | a <- [0,30..330] ]
+  ++
+  [ rotate a (translate 0 180 (rectangleSolid 10 40)) | a <- [0,90..270] ]
+
+
+minute t = rotate (fromInteger (180 + 6* floor (t / 60))) (translate 0 100 (rectangleSolid 3 200))
+hour t   = rotate (fromInteger (75 + 6* floor (t / 3600)))  (translate 0 70 (rectangleSolid 3 140))
+second t = rotate (fromInteger (floor t *6)) (translate 0 100 (rectangleSolid 2 200))
+
+main = animate (InWindow "" (600, 600) (100,200)) white spedupFun
+
+
+clocks = [(clock1,3),(clock2,3)]
+clocksInf = cycle clocks
+
+
+scene t = animateSequenceRel clocks fun
+
+animateSequenceRel :: [(Animation,Float)] -> Animation -> Animation
+animateSequenceRel (x:xs) _ = undefined
+animateSequenceRel [] fallback = fallback
+
+animateSequenceAbs :: [(Animation, Float)] -> Animation -> Animation
+animateSequenceAbs = undefined
 
 
 
- animateSequenceAbs :: [ (Animation, Float) ] -> Animation -> Animation
+
+
+
+
+
+
+fun t = pictures [
+    jumprope (5*t),
+    translate (-210) 0 stickFigure,
+    translate   210  0 stickFigure,
+    jumper (5*t)
+    ]
+jumprope t = scale 1.75 (1.1 * sin t) rope
+rope = line [ (x, 100 * cos (0.015 * x)) | x <- [-100, -75 .. 100 ] ]
+stickFigure = pictures [
+    line [ (-35, -100), (0, -25) ],
+    line [ ( 35, -100), (0, -25) ],
+    line [ (  0,  -25), (0,  50) ],
+    line [ (-35,    0), (0,  40) ],
+    line [ ( 35,    0), (0,  40) ],
+    translate 0 75 (circle 25)
+    ]
+jumper t = translate 0 (max 0 (-50 * sin t)) stickFigure
