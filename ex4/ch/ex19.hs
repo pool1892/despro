@@ -32,7 +32,7 @@ decode' (I:xs) = maybebaby (decode' xs) (rechts xs)
   where rechts= decode'.snd.fromJust .decode'
         maybebaby (Just (a,b)) (Just (c,d)) = Just (Node a c,d)
         maybebaby _        _        = Nothing
-
+--Could have used the function "maybe"...which is nice
 
 
 
