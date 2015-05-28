@@ -58,33 +58,55 @@ decode c = case decode' c of
  - *nicht* decode, sondern hoechstens wieder decode' aufrufen wollen (sollten).
  -}
 
+-- diese altbekannte Funktion spart massig Codezeilen
+andThen :: Maybe a -> (a -> Maybe b) -> Maybe b
+andThen inp f = case inp of
+                    Nothing -> Nothing
+                    Just v  -> f v
+
+
 instance Encode Bool where
   encode False = [O]
   encode True  = [I]
 
--- instance Decode Bool where
---   ...
+instance Decode Bool where
+    decode' []         = Nothing
+    decode' (O : rest) = Just (False, rest)
+    decode' (I : rest) = Just (True, rest)
 
--- instance (Encode a, Encode b) => Encode (Either a b) where
---   ...
+instance (Encode a, Encode b) => Encode (Either a b) where
+    encode (Left adata)  = O : encode adata
+    encode (Right bdata) = I : encode bdata
 
--- instance (Decode a, Decode b) => Decode (Either a b) where
---   ...
+instance (Decode a, Decode b) => Decode (Either a b) where
+    decode' []          = Nothing
+    decode' (O : adata) = decode' adata `andThen` \(v, rest) -> Just (Left v, rest)
+    decode' (I : bdata) = decode' bdata `andThen` \(v, rest) -> Just (Right v, rest)
 
 instance Encode a => Encode [a] where
   encode []     = [O]
   encode (a:as) = I : encode a ++ encode as
+-- Bsp eines Codes: [I, Element1Codiert, I, Element2Codiert, I, Element3Codiert, ... , I, LastElementCodiert, O]
+-- Bsp eines Codes: [[]] -> [I, O, O]
 
--- instance Decode a => Decode [a] where
---   ...
+instance Decode a => Decode [a] where
+    decode' []         = Nothing
+    decode' (O : rest) = Just ([], rest) -- rest ist wichtig fuer: decode $ encode [[]]
+    decode' (I : rest) = decode' rest `andThen` \(v1, rest) -> -- Falls ein gueltiges Element nach I dekodiert wurde
+                         decode' rest `andThen` \(v2, rest) -> Just(v1 : v2, rest) -- Dann dekodiere die Restliste
 
 data Tree a = Leaf a | Node (Tree a) (Tree a)  deriving (Eq, Show)
 
--- instance Encode a => Encode (Tree a) where
---   ...
+instance Encode a => Encode (Tree a) where
+    encode (Leaf adata) = O : encode adata
+    encode (Node t1 t2) = [I] ++ encode t1 ++ encode t2
 
--- instance Decode a => Decode (Tree a) where
---   ...
+instance Decode a => Decode (Tree a) where
+    decode' [] = Nothing
+    decode' (O : rest) = decode' rest `andThen` \(v, rest) -> Just (Leaf v, rest)
+
+    decode' (I : rest) = decode' rest `andThen` \(v1, rest) ->
+                         decode' rest `andThen` \(v2, rest) -> Just (Node v1 v2, rest)
 
 {- Insgesamt soll die dem folgenden Test entsprechende allgemeine Aussage 
  - gelten:
@@ -140,3 +162,6 @@ instance Arbitrary a => Arbitrary (Tree a) where
                                    l <- treegen i
                                    r <- treegen (n-1-i)
                                    return (Node l r)
+{- hlint:
+ - No suggestions
+ -}

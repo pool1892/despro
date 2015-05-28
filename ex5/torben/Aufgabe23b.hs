@@ -1,23 +1,15 @@
-a) Vergleiche in deutscher Lesereihenfolge:
-5 == 6
-5 == 6; 5 == 5
-4 == 6; 4 == 5
-3 == 6; 3 == 5; 3 == 4
-3 == 6; 3 == 5; 3 == 4; 3 == 3
-2 == 6; 2 == 5; 2 == 4; 2 == 3
-1 == 6; 1 == 5; 1 == 4; 1 == 3; 1 == 2
-
-b) Ausgabevergleich von nub und elems
+{-
+Ausgabevergleich von nub und elems
 Gleiche Ausgabe: 
     1. Eingabe Typ [Int]
     2. Reihenfolge des ersten Auftretens der Zahlen = Reihenfolge des letzten Auftretens der Zahlen
 
 Ungleiche Ausgabe:
-    Eingabe ist eine unendliche Liste.
-    Wenn 2. von "Gleiche Ausgabe" nicht erfüllt ist.
-    Da elems die Liste von hinten nach vorne durchgeht und nubs scheinbar von vorne nach hinten, ist
-    diese Bedingung notwendig.
-
+    Fall1: Eingabe ist eine unendliche Liste.
+    Fall2: Wenn 2. von "Gleiche Ausgabe" nicht erfuellt ist.
+           Da elems die Liste von hinten nach vorne durchgeht und nubs scheinbar von vorne nach hinten, ist
+           diese Bedingung notwendig.
+-}
 module Blueprint where
 import Data.List
 import Test.QuickCheck
@@ -28,11 +20,11 @@ elems xs = foldr (\x ys -> if elemHelper x ys then ys else x : ys) [] xs
 elemHelper :: Int -> [Int] -> Bool
 elemHelper x xs = foldr (\y b -> x == y || b) False xs
 
-// f dreht die Eingabe um, sodass nub nun (wie elems) "von hinten nach vorne" durchgeht
+-- f dreht die Eingabe um, sodass nub nun (wie elems) "von hinten nach vorne" durchgeht
 f :: [Int] -> [Int]
 f = reverse
 
-{- Da nub neue Elemente hinten an die Ausgabeliste anhängt (und nicht vorne wie elems),
+{- Da nub neue Elemente hinten an die Ausgabeliste anhaengt (und nicht vorne wie elems),
  - muss die Ausgabeliste ebenfalls umgedreht werden.
  -}
 g :: [Int] -> [Int]
