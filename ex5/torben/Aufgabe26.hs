@@ -1,6 +1,6 @@
 module Blueprint where
 import Prelude
-import MParserCore
+import MParserCore -- noch in der ParserCore-Variante
 import Aufgabe25 (exactly) -- steht zur Verfuegung
 import Parser
 import Test.QuickCheck
@@ -20,8 +20,27 @@ tree = leaf ||| node
   where 
     leaf = do exactly "Leaf " 
               c <- item
-              yield undefined
-    node = undefined
+              case c of
+                'I' -> return (Leaf I)
+                'O' -> return (Leaf O)
+                otherwise -> failure
+    node = do exactly "Node "
+              char '('
+              t1 <- tree
+              exactly ") "
+              c <- item
+              exactly " ("
+              t2 <- tree
+              char ')'
+              case c of
+                'I' -> return (Node t1 I t2)
+                'O' -> return (Node t1 O t2)
+                otherwise -> failure
+
+charToBit :: Char -> Bit
+charToBit c = case c of
+                'I' -> I
+                'O' -> O
 
 {- Es soll also insbesondere fuer alle t :: Tree Bit gelten:
  -
@@ -41,3 +60,12 @@ sizedTree n = frequency [ (1, sizedTree 0), (2^n, branching) ]
                        a  <- arbitrary
                        t2 <- sizedTree (n-1)
                        return (Node t1 a t2)
+                       
+{- hlint:
+ - 1 suggestion:
+ - Aufgabe26.hs:57:15: Warning: Use liftM
+ - Found
+ -  arbitrary >>= (return . Leaf)
+ - Why not
+ -  Control.Monad.liftM Leaf arbitrary
+ -}

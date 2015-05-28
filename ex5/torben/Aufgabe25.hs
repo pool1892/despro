@@ -1,6 +1,6 @@
 module Blueprint where
 import Prelude
-import MParserCore
+import MParserCore -- noch in der ParserCore-Variante
 import Parser
 import Test.QuickCheck
 
@@ -9,8 +9,15 @@ import Test.QuickCheck
  -}
 
 exactly :: String -> Parser ()
-exactly = undefined
+exactly "" = yield ()
+exactly s = do char (head s)
+               exactly (tail s)
+               return ()
 
 {- Es soll also gelten, dass 'exactly s' genau die Eingabe s akzeptiert. -}
 
 test s = parse (exactly s) s == ()
+
+{- hlint:
+ - No suggestions
+ -}
