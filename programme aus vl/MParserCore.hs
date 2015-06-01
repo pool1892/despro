@@ -1,11 +1,12 @@
-module MParserCore (Parser, parse, item, (|||), failure, (++>), yield) where
+module MParserCore (Parser, parse, item, (|||), failure, (++>), yield, 
+                    module Control.Applicative) where
 
-import qualified ParserCore
-import Control.Applicative
+import qualified LParserCore as ParserCore
+import Control.Applicative hiding (Alternative(..), optional)
 
 newtype Parser a = P {unP :: ParserCore.Parser a}
 
-parse :: Parser a -> String -> a
+parse :: Parser a -> String -> [a]
 parse = ParserCore.parse . unP
 
 item :: Parser Char
