@@ -11,31 +11,44 @@ data Bit    = O | I                              deriving (Read, Show, Eq)
 data Tree a = Leaf a | Node (Tree a) a (Tree a)  deriving (Show, Eq)
 
 {- Schreiben Sie einen Parser, der (in Umkehrung des Effektes von show)
- - Stringrepraesentationen von Werten des Typs Tree Bit erkennt und 
+ - Stringrepraesentationen von Werten des Typs Tree Bit erkennt und
  - umwandelt.
  -}
 
 tree :: Parser (Tree Bit)
 tree = leaf ||| node
-  where 
-    leaf = do exactly "Leaf " 
+  where
+    leaf = do exactly "Leaf "
               c <- item
-              yield undefined
-    node = undefined
+              charToLeaf c
+    node = do exactly "Node "
+              char '('
+              t1 <- tree
+              exactly ") "
+              c <- item
+              exactly " ("
+              t2 <- tree
+              char ')'
+              charToNode t1 c t2
 
-{- Es soll also insbesondere fuer alle t :: Tree Bit gelten:
- -
- -   parse tree (show t) == t
- -
- - Testbar mittels QuickCheck: -}
+charToBit :: Char -> Parser Bit
+charToBit 'O' = return O
+charToBit 'I' = return I
+charToBit _ = failure
 
-test = forAll (elements [1..6]) $ \(Blind h) -> forAll (sizedTree h) 
+charToLeaf :: Char -> Parser (Tree Bit)
+charToLeaf c = mapP Leaf (charToBit c)
+
+charToNode :: Tree Bit -> Char -> Tree Bit -> Parser (Tree Bit)
+charToNode t1 c t2 = mapP (\x -> Node t1 x t2) (charToBit c)
+
+test = forAll (elements [1..6]) $ \(Blind h) -> forAll (sizedTree h)
                                 $ \t -> parse tree (show t) == t
 
 instance Arbitrary Bit where
   arbitrary = elements [O,I]
 
-sizedTree 0 = arbitrary >>= (return . Leaf)
+sizedTree 0 = liftP Leaf arbitrary
 sizedTree n = frequency [ (1, sizedTree 0), (2^n, branching) ]
   where branching = do t1 <- sizedTree (n-1)
                        a  <- arbitrary

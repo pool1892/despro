@@ -16,6 +16,4 @@ exactly str = do char (head str)
 
 {- Es soll also gelten, dass 'exactly s' genau die Eingabe s akzeptiert. -}
 
-test s = parse (exactly s) s == ()
-
-main = print $ quickCheck test
+-- test s = parse (exactly s) s == ()
