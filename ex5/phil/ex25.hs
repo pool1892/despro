@@ -5,11 +5,13 @@ import Parser
 import Test.QuickCheck
 
 {- Schreiben Sie einen Parser zur Erkennung einer genau festgelegten
- - Zeichenkette: 
+ - Zeichenkette:
  -}
 
-exactly :: String -> Parser ()
-exactly = undefined
+exactly "" = yield ()
+exactly s = do char (head s)
+                 exactly (tail s)
+                 return ()
 
 {- Es soll also gelten, dass 'exactly s' genau die Eingabe s akzeptiert. -}
 
