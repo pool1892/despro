@@ -74,14 +74,14 @@ outlook p f = case endPosition f of
  -               ((A,Z),Continue [ ... ])]
  -}
 
-makeMoves :: Player -> [Pos] -> Field -> Field
-makeMoves p [] f = f
-makeMoves p [x] f = makeMove p x f
-makeMoves p (x:xs) f= makeMoves (switch p) xs (makeMove p x f)
+Play :: Player -> [Pos] -> Field -> Field
+Play p [] f = f
+Play p [x] f = makeMove p x f
+Play p (x:xs) f= Play (switch p) xs (makeMove p x f)
 
 
 main = do
-  let a = makeMoves xPlayer exampleMoves initialField
+  let a = Play xPlayer exampleMoves initialField
   print a
 
   let o = outlook xPlayer a
