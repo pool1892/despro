@@ -1,16 +1,21 @@
-module Blueprint where
+module Aufgabe25 where
 import Prelude
 import MParserCore
 import Parser
 import Test.QuickCheck
 
 {- Schreiben Sie einen Parser zur Erkennung einer genau festgelegten
- - Zeichenkette: 
+ - Zeichenkette:
  -}
 
 exactly :: String -> Parser ()
-exactly = undefined
+exactly "" = yield ()
+exactly str = do char (head str)
+                 exactly (tail str)
+                 return ()
 
 {- Es soll also gelten, dass 'exactly s' genau die Eingabe s akzeptiert. -}
 
 test s = parse (exactly s) s == ()
+
+main = print $ quickCheck test
