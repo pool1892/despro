@@ -17,13 +17,31 @@ import Aufgabe18 (GameTree (..), switch)
  -   -> Just player, fuer Sieg (wenn selbst player) oder Niederlage (wenn der andere)
  -}
 
+-- 1. versuch zu blocken 2. gute position finden
 bestMove :: (Player, GameTree) -> (Pos, Maybe Player)
-bestMove = undefined
+bestMove (p, Draw) = Nothing
+bestMove (p, Lost) = p
+bestMove (p, Continue subTree) = bestMove (switch p) subTree
+
+
 
 
 main = do
-  print (bestMove (xPlayer, Lost))
-  print (bestMove (xPlayer, Draw))
+  let tree1 = Continue [((A,Z),Continue [((C,X),Continue [((C,Y),Draw)]),
+                           ((C,Y),Continue [((C,X),Lost)])]),
+          ((C,X),Lost),
+          ((C,Y),Continue [((A,Z),Lost),
+                           ((C,X),Continue [((A,Z),Draw)])])]
+  let move1 = ((C,X), Just xPlayer)
+
+
+  let tree2 = Continue [((C,X),Continue [((C,Y),Draw)]),
+          ((C,Y),Continue [((C,X),Lost)])]
+  let move2 = ((C,X), Nothing)
+
+  print (bestMove tree1)
+  print (bestMove tree2)
+
 
 
 {- Sie koennen voraussetzen/verwenden, dass bestMove nur fuer Situationen aufgerufen
