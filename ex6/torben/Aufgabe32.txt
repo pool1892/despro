@@ -1,0 +1,30 @@
+LParserCore.hs
+Beweise: (p ||| q) ++> f = (p ++> f) ||| (q ++> f)
+Für alle inp gilt:
+
+    ((p ||| q) ++> f) inp
+= (by definition of (++>))
+    concatMap (\(x, rest) -> f x rest) ((p ||| q) inp)
+= (by definition of (|||))
+    concatMap (\(x, rest) -> f x rest) (p inp ++ q inp)
+= ("Zusammenspiel" von (concatMap) und (++))
+    concatMap (\(x, rest) -> f x rest) (p inp) ++ concatMap (\(x, rest) -> f x rest) (q inp)
+= (by definition of (++>))
+    ((p ++> f) inp) ++ ((q ++> f) inp)
+= (by definition of (|||))
+    ((p ++> f) ||| (q ++> f)) inp
+
+
+
+ParserCore.hs
+Beweise: (p ||| q) ++> f /= (p ++> f) ||| ( q ++> f)
+
+Gegenbsp:
+inp = "bc"
+p = many (char 'a')
+q = many (char 'b')
+f = \x -> if x == [()] then lower else failure
+
+Dann gilt (nachweisbar in ghci):
+parse ((p ||| q) ++> f) inp = *** Exception: invalid input
+parse ((p ++> f) ||| (q ++> f)) inp = 'c'
