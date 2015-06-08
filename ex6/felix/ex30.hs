@@ -10,9 +10,13 @@ import Test.QuickCheck
  -}
 
 s :: Parser ()
-s = undefined
+s = pure () ||| check 'a' 'b' ||| check 'b' 'a'
+
+check x y = char x *> s <* char y *> s
 
 {- Beachten Sie dass die Verwendung von ++> ausgeschlossen ist, ebenso die
  - Verwendung von do-Notation oder >>= und return!
  - Zur Verfuegung stehen jedoch pure, (<*>), (<*), (*>), (<$>), (<$).
  -}
+
+-- main = show (parse "abbabaabba")
