@@ -1,0 +1,10 @@
+(zugrunde liegende Regeln: 11. Vorlesung Folie 419)    
+1. [ e | x <-| xs ]    |-> map (\x |-> e) xs 
+2. [ e | b ]           |-> if b then [ e ] else [ ] 
+3. [ e | b, Q ]        |-> if b then [ e | Q ] else [ ] 
+4. [ e | x <-| xs, Q ] |-> concat (map (\x |-> [ e | Q ]) xs)
+
+
+        [x * x | x <- [1..150], x `mod` 4 == 0]
+4.  |-> concat (map (\x -> [x * x | x `mod` 4 == 0]) [1..150])
+2.  |-> concat (map (\x -> if (x `mod` 4 == 0) then [x * x] else []) [1..150])
