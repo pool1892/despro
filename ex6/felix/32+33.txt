@@ -1,0 +1,38 @@
+32:
+Zeigen Sie, dass die (eventuelle) Äquivalenz
+
+(p |||q) ++> f = (p ++> f)|||(q ++> f)
+
+bzgl. der Definitionen aus ”ParserCore.hs“ nicht gilt, jedoch bzgl. der Definitionen aus ”LParserCore.hs“ gilt.
+Beim Beweis der zweiten Tatsache können Sie wahre (und deutlich gekennzeichnete) Hilfs- aussagen zum ”Zusammenspiel“ von map, concat, concatMap, ++ ohne eigenen Nachweis heranziehen.
+
+ParserCore: Betrachte
+f x = if x == [()] then lower else failure
+p = many (char 'y')
+q = many lower
+input = ’xY’
+a = ((p ||| q) ++> f)
+b =  ((p ++> f) ||| (q ++> f))
+parse a input wirft exception, b funktioniert dagegen
+-> kann nicht äquivalent sein
+
+
+LParserCore:
+  ((p ||| q) ++> f) inp
+= concatMap (\(x, rest) -> f x rest) ((p ||| q) inp) -- ++>
+= concatMap (\(x, rest) -> f x rest) (p inp ++ q inp) -- |||
+= concatMap (\(x, rest) -> f x rest) (p inp) ++ concatMap (\(x, rest) -> f x rest) (q inp) -- Distributiv (++)
+= ((p ++> f) inp) ++ ((q ++> f) inp) -- 2x ++> rückwärts
+= ((p ++> f) ||| (q ++> f)) inp -- |||
+-> äquivalent
+
+
+===========
+33:
+
+überführe list comprehension systematisch in einen Ausdruck ohne Verwendung von list comprehensions :
+
+[x * x | x <- [1..150], x ‘mod ‘ 4 == 0 ]
+= concat (map (\x -> [x * x | x ‘mod‘ 4 == 0]) [1..150])
+= concat (map (\x -> if (x ‘mod‘ 4 == 0) then [x * x] else []) [1..150])
+

@@ -9,7 +9,9 @@ import Test.QuickCheck
  -}
 
 palindrome :: Parser ()
-palindrome = undefined
+palindrome = pure () ||| \x -> (char x *> palindrome x <* char x ) <$> ['a'..'z']
+
+
 
 {- Beachten Sie dass die Verwendung von ++> ausgeschlossen ist, ebenso die
  - Verwendung von do-Notation oder >>= und return!
@@ -35,3 +37,8 @@ invalidInputs = do n <- growingElements [2..100]
                    if s == reverse s
                      then invalidInputs
                      else return s
+
+
+main = do
+  quickCheck test1
+  quickCheck test2
