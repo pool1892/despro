@@ -8,8 +8,12 @@ import Test.QuickCheck
  - Zeichenkette: 
  -}
 
+
 exactly :: String -> Parser ()
-exactly = undefined
+exactly "" = yield ()
+exactly x = do char (head x)
+               exactly (tail x)
+               return ()
 
 {- Es soll also gelten, dass 'exactly s' genau die Eingabe s akzeptiert. -}
 

@@ -1,0 +1,45 @@
+\documentclass[10pt]{article}
+
+\usepackage{style}
+
+\title{Deskriptive Prog, Aufgabe 32, 33}
+
+\author{Christoph Schwerdtfeger}
+ 
+\begin{document}
+\maketitle
+\section{Aufgabe 32}
+\subsection{LParserCore}
+\begin{align*}
+\zuz \mathtt{(p|||q)++>f = (p++>f)|||(q++>f)}
+\\ \mathtt{(p|||q)++>f a}
+\\\Longleftrightarrow \mathtt{concatMap(\lambda\ (x,y) \rightarrow\ f\ x\ y)\ (p|||q\ a)} \tag{Def. $++>$}
+\\\Longleftrightarrow \mathtt{concatMap(\lambda\ (x,y) \rightarrow\ f\ x\ y)\ (p\ a\ ++\ q\ a)} \tag{Def. $|||$}
+\\\Longleftrightarrow \mathtt{concat(map(\lambda\ (x,y) \rightarrow\ f\ x\ y)\ (p\ a\ ) ++\ map(\lambda\ (x,y) \rightarrow\ f\ x\ y)\ (q\ a))}\tag{Eigenschaft von map}
+\\\Longleftrightarrow \mathtt{concat(map(\lambda\ (x,y) \rightarrow\ f\ x\ y)\ (p\ a\ )) ++\ concat(map(\lambda\ (x,y) \rightarrow\ f\ x\ y)\ (q\ a))} \tag{Eigenschaft von concat}
+\\\Longleftrightarrow \mathtt{(p++>f a)|||(q++>f a)} \tag{Alles rückwärts}
+\end{align*}
+\subsection{ParserCore}
+\begin{align*}
+\zuz \mathtt{(p|||q)++>f \neq (p++>f)|||(q++>f)}
+\end{align*}
+Mittels Gegenbeispiel - 
+Betrachte folgende Definition: 
+\begin{verbatim}
+p= many digit
+q= many lower
+f x y= if x == [()] then upper y else failure y
+a = 'xY'
+\end{verbatim}
+Dann wird $\mathtt{(p|||q)++>f} $ im Gegensatz zur rechten Seite einen Fehler werfen (liegt an der Nutzung von yield in many).
+
+\section{Aufgabe 33}
+\begin{verbatim}
+[x*x|x<-[1..150], x`mod`4 == 0]
+[x * x | x `mod` 4 == 0,c]) [1..150])
+
+concat (map (\x -> [x * x | x `mod` 4 == 0]) [1..150])
+concat (map (\x -> if (x `mod` 4 == 0) then (x * x) else []) [1..150])
+
+\end{verbatim}
+\end{document}

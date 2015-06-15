@@ -7,7 +7,15 @@ import Test.QuickCheck
 {- Schreiben Sie einen Parser, der Palindrome beschreibt/erkennt. -}
 
 palindrome :: Parser ()
+<<<<<<< Updated upstream
 palindrome = undefined
+=======
+palindrome =  yield() ||| item +++ yield() ||| do start <- item 
+                                                  palindrome
+                                                  finish <- item
+                                                  if start == finish then yield() else failure
+ 
+>>>>>>> Stashed changes
 
 {- Fuer QuickCheck-Testen: -}
 
@@ -28,3 +36,10 @@ invalidInputs = do n <- growingElements [2..100]
                    if s == reverse s
                      then invalidInputs
                      else return s
+<<<<<<< Updated upstream
+=======
+
+{- hlint:
+ - No suggestions
+ -}
+>>>>>>> Stashed changes

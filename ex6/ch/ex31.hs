@@ -5,15 +5,25 @@ import Parser
 import Test.QuickCheck
 
 {- Schreiben Sie einen Parser, der Palindrome beschreibt/erkennt, die aus
+<<<<<<< Updated upstream
  - Kleinbuchstaben (des englischen Alphabets) bestehen.
+=======
+ - Kleinbuchstaben (des englischen Alphabets) bestehen. 
+>>>>>>> Stashed changes
  -}
 
 palindrome :: Parser ()
 palindrome = undefined
 
+<<<<<<< Updated upstream
 {- Beachten Sie dass die Verwendung von ++> ausgeschlossen ist, ebenso die
  - Verwendung von do-Notation oder >>= und return!
  - Zur Verfuegung stehen jedoch pure, (<*>), (<*), (*>), (<$>), (<$).
+=======
+{- Beachten Sie dass die Verwendung von ++> ausgeschlossen ist, ebenso die 
+ - Verwendung von do-Notation oder >>= und return!
+ - Zur Verfuegung stehen jedoch pure, (<*>), (<*), (*>), (<$>), (<$). 
+>>>>>>> Stashed changes
  -}
 
 {- Fuer QuickCheck-Testen: -}
