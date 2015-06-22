@@ -1,0 +1,16 @@
+towers 0 i j k = [ ]
+towers n i j k = towers (n − 1) i k j ++ [ (i , j ) ] ++ towers (n − 1) k j i
+
+Variante: towersCat, mit:
+
+towersCat t as = towers t ++ as
+
+Betrachte:
+
+1. t = n:
+towerCat n i j k as = tower n i j k ++ as
+= tower (n-1) i k j ++ [(i,j)] ++ tower (n-1) k j i ++ as
+= towerCat (n-1) i k j ([(i,j)]: towerCat (n-1) k j i as)
+
+2. t = 0:
+towersCat 0 i j k as = towers 0 i j k ++ as = [] ++ as = as

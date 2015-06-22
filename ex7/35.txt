@@ -1,0 +1,14 @@
+Betrachte:
+
+1. n = 0:
+sumDown 0
+= sum(downFrom 0)
+= sum []
+= 0
+
+2. n > 0
+sumDown n
+= sum (downFrom n)
+= sum (n: downFrom (n-1))
+= n+sum(downFrom (n-1))
+= n+sumDown(n-1)
