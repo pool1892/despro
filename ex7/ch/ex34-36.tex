@@ -1,0 +1,48 @@
+\documentclass[10pt]{article}
+
+\usepackage{style}
+
+\title{Ex 34-36}
+
+\author{Christoph Schwerdtfeger}
+ 
+\begin{document}
+\maketitle
+\section{34}
+\begin{verbatim}
+Let towerCat n i j k as = tower (n i j k )++ as
+
+towerCat 0 i j k as 
+= tower 0 i j k ++ as 
+= []++ as
+= as
+
+towerCat n i j k as 
+= tower n i j k ++ as
+= tower (n-1) i k j ++ [(i,j)] ++ tower (n-1) k j i ++ as
+= towerCat (n-1) i k j ([(i,j)]: towerCat (n-1) k j i as)
+\end{verbatim}
+\section{35}
+\begin{verbatim}
+sumdown 0 = sum(downFrom 0)= sum [] =0
+sumdown n |n>0 
+= sum (downFrom n) 
+= sum (n: downFrom (n-1)) 
+= n+sum(downFrom (n-1))
+= n+sumdown(n-1)
+\end{verbatim}
+\section{36}
+tfold f k Empty = k
+\\tfold f k (Node l a r) = f (tfold f k l) a (tfold f k r)
+\\Dann ist g= tfold f k, falls
+\\g empty = k
+\\g (Node l a r) = f (g l) a (g r),
+also $$g=tfold\ f\ k \Longleftrightarrow g\ Empty = k \vee \forall l,a,r: g\ (Node\ l\ a\ r\ )= f\ (g\ l\ ) a\ (g\ r\ )$$
+Dann: 
+\begin{align*}
+tfold\ f_2\ k_2\ . tfold\ f_1\ k_1 = tfold\ f_3\ k_3
+\\ \Longleftrightarrow tfold f_2\ k_2\ . tfold f_1\ k_1 Empty = k_3 \\\text{ und } \forall l,a,r: (tfold\ f_2\ k_2\ . tfold\ f_1\ k_1 ) (Node\ l\ a\ r\ ) \\= f_3 (tfold\ f_2\ k_2\ . tfold\ f_1\ k_1 l) a (tfold\ f_2\ k_2\ . tfold\ f_1\ k_1 r) 
+\\ \Longleftrightarrow f_2\ k_2\ k_1  = k_3 \\\text{ und } \forall l,a,r: (tfold\ f_2\ k_2\ (f_1\ (tfold\ f_1\ k_1\ l) a\  (tfold\ f_1\ k_1\ r))) \\ = f_3 (tfold\ f_2\ k_2\ . tfold\ f_1\ k_1 l) a (tfold\ f_2\ k_2\ . tfold\ f_1\ k_1 r) 
+\end{align*}
+Da hänge ich beim Empty case fest, der Rest geht aber, glaube ich, einfach so durch...
+\end{document}
