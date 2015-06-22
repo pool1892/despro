@@ -1,0 +1,39 @@
+Aufgabe 36
+----------
+
+Seien
+
+  data BinTree a = Empty | Node (BinTree a)  a (BinTree a)
+
+  tfold :: (b -> a -> b -> b) -> b -> BinTree a -> b
+  tfold f k Empty = k
+  tfold f k (Node l a r) = f (tfold f k l) a (tfold f k r)
+
+~> Zeige induktiv, dass folgende Fusionsregel gilt:
+        (*) h k_1 = k_3
+     und
+       (**) forAll x,y,z: h (f_1 x y z) = f_3 (h x) y (h z)
+     implizieren: 
+      (***) (h . tfold f_1 k_1 = tfold f_3 k_3)
+
+Beweis: Beginne mit dem Induktionsanfang.
+ Induktionsanfang: tfold angewandt auf Empty.
+   Dann gilt:
+     h (tfold f_1 k_1 Empty) = h ( k_1 )                                                 (Definition von tfold im 1. Fall)
+                             = k_3                                                       (Bedingung (*))
+                             = tfold f_3 k_3 Empty                                       (Definition von tfold im 1. Fall)
+
+   Also gilt die Regel in diesem Fall.
+
+ Induktionsschritt: tfold angewandt auf beliebige Bäume unter der Voraussetzung, dass
+   die Regel bereits für den linken und den rechten Teilbaum gilt.
+
+   Dann ist
+     h (tfold f_1 k_1 (Node l a r)) = h (f_1 (tfold f_1 k_1 l) a (tfold f_1 k_1 r))      (Definition von tfold im 2. Fall)
+                                    = f_3 (h (tfold f_1 k_1 l)) a (h (tfold f_1 k_1 r))  (Bedingung (**))
+                                    = f_3 (tfold f_3 k_3 l) a (tfold f_3 k_3 r)          (Induktionsvoraussetzung (***))
+                                    = tfold f_3 k_3 (Node l a r)                         (Definition von tfold im 2. Fall)
+
+   Mittels dieser Induktion folgt also, dass die Fusionsregel für alle Binärbäume gültig ist.
+
+                                                                                        [] 

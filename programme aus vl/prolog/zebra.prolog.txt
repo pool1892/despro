@@ -1,0 +1,20 @@
+right_of(R, L, [ L | [ R | _ ] ]).
+right_of(R, L, [ _ | Rest ]) :- right_of(R, L, Rest).
+next_to(X, Y, List) :- right_of(X, Y, List).
+next_to(X, Y, List) :- right_of(Y, X, List).
+zebra(Zebra_Owner) :-
+	Houses = [ [ _, norwegian, _, _, _ ], _, [ _, _, milk, _, _ ], _, _ ],	% 8 & 9
+	member([ red, englishman, _, _, _ ], Houses),			% 1
+	member([ _, spaniard, _, dog, _ ], Houses),			% 2
+	member([ green, _, coffee, _, _ ], Houses),			% 3
+	member([ _, ukrainian, tea, _, _ ], Houses),			% 4
+	right_of([ green, _, _, _, _ ], [ ivory, _, _, _, _ ], Houses),	% 5
+	member([ _, _, _, snails, winston ], Houses),			% 6
+	member([ yellow, _, _, _, kools ], Houses),			% 7
+	next_to([ _, _, _, _, chesterfield ], [ _, _, _, fox, _ ], Houses),	% 10
+	next_to([ _, _, _, _, kools ], [ _, _, _, horse, _ ], Houses),	% 11
+	member([ _, _, juice, _, lucky ], Houses),			% 12
+	member([ _, japanese, _, _, parliaments ], Houses),		% 13
+	next_to([ _, norwegian, _, _, _ ], [ blue, _, _, _, _ ], Houses),	% 14
+	member([ _, Zebra_Owner, _, zebra, _ ], Houses),		% ?
+	member([ _, _, water, _, _ ], Houses).				% ?
