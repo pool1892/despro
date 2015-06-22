@@ -5,3 +5,7 @@
  *
  * Es soll also z.B. replicate(s(s(s(0))),a,[a,a,a]) gelten.
  */
+
+
+replicate(0,_,[]).
+replicate(s(A),X, [X|T]) :- replicate(A, X, T).
