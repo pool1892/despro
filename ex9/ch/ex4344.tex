@@ -1,0 +1,29 @@
+\documentclass[10pt]{article}
+
+\usepackage{style}
+
+\title{Ex 43, 44}
+
+\author{Christoph Schwerdtfeger}
+ 
+\begin{document}
+\maketitle
+\section{ex 43}
+\begin{align*}
+H_U=\{ frankfurt, san\_francisco, chicago, honolulu, maui \}
+\\ H_B=\{direct(x,y)|x,y\in H_U\} \cup \{connection(x,y)|x,y\in H_U\}
+\\H_{MOD}=\{direct(x,y)| (x,y)\in \mathcal D \}\cup \{ connection(x,y)|(x,y) \in \mathcal D \vee (x,y) \in \mathcal I\}
+\\\text{where } \mathcal D := \{(frankfurt,san\_francisco), (frankfurt, chicago), (san\_francisco, honolulu), (honolulu, maui)\}
+\\\text{and } \mathcal I := \{(frankfurt, honolulu),(frankfurt, maui), (san\_francisco, maui)\}
+\end{align*}
+\section{ex 44}
+Bin mir nicht sicher, was in $T_P(\emptyset)$ bereits hinein gehört. Also gebe ich sicherheitshalber auch noch die vierte Iteration an, damit ist der Fixpunkt erreicht, wenn ich das richtig sehe.
+\begin{align*}
+T_P(\emptyset)=\{juliet, petra, harry, paul, luke, tom\}
+\\T_P(T_P(\emptyset))= T_P(\emptyset)\cup \{female( juliet ), female(petra ), parent(juliet , petra), \\parent( juliet , paul ), parent(petra , harry ), parent(harry, luke), parent ( luke , tom )\}
+\\T_P(T_P(T_P(\emptyset)))= T_P(\emptyset)\cup T_P(T_P(\emptyset))
+\\ \cup \{ sister(petra, paul), grandmother(juliet, harry)    \}
+\\T_P(T_P(T_P(T_P(\emptyset))))= T_P(\emptyset)\cup T_P(T_P(\emptyset))\cup T_P(T_P(T_P(\emptyset)))
+\\\cup \{ancestor(juliet, harry), ancestor(juliet, luke)\}
+\end{align*}
+\end{document}
