@@ -1,0 +1,108 @@
+%Preamble
+\documentclass[letterpaper, 12pt, a4paper]{article}
+
+\usepackage[top=3cm, right=2cm, bottom=2.5cm, left=2cm]{geometry}
+\usepackage{import}
+\usepackage[unicode]{hyperref}
+\usepackage[final]{pdfpages}
+\usepackage{selinput}
+
+
+% \usepackage[osf]{heuristica}
+
+% \usepackage{newcent}
+
+% command for double brackets
+\newcommand{\dbr}[1]{%
+  \ifmmode
+    \llbracket #1 \rrbracket
+  \else
+    $\llbracket #1 \rrbracket$
+  \fi
+}
+
+\usepackage{tikz}
+\usepackage{xcolor}
+\newcommand\grade[1]{\textcolor{red}{#1}}
+
+\usetikzlibrary{arrows,automata}
+
+% \usepackage{mathpazo}
+% \usepackage{fouriernc}
+% \usepackage{mathpple}
+
+
+\usepackage[T1]{fontenc}
+% \usepackage[utf8]{inputenc}
+% \renewcommand*\rmdefault{ppl}
+
+% https://www.math.unl.edu/~shartke2/computer/latex/latex.php
+% \usepackage{millennial}
+
+\frenchspacing
+
+% \usepackage{lucidabr}
+
+\usepackage{enumerate}
+\usepackage[shortlabels]{enumitem}
+
+\hypersetup{linktocpage}
+
+% own math macros
+\usepackage{mathhelper}
+
+
+\SelectInputMappings{
+adieresis={ä},
+germandbls={ß}
+}
+\usepackage{setspace}
+\setstretch{1.3}
+\setlength\parindent{0pt}
+
+%Document
+\begin{document}
+  \pagenumbering{roman}
+  \pagenumbering{arabic}
+
+
+  \begin{center}
+  {\Large{\bfseries{Deskreptive Programmierung}}}\\[0.5cm]
+  {\large{\bfseries{Felix Müller (2807144)}}}\\[0.4cm]
+  SS 15
+  \end{center}
+
+
+\newcommand{\inlinecode}{\texttt}
+
+
+\section*{Blatt 9}
+\subsection*{Aufgabe 43}
+\begin{itemize}
+  \item Herbrand-Universum ($H_U$) := \inlinecode{\{frankfurt, san\_francisco, chicago, honolulu, maui\}}
+  \item Herbrand-Basis ($H_B$) := \inlinecode{\{connection(x,y) | x,y $\in H_U$ \} $\cup$ \{direct(x,y) | x,y $\in H_U$ \}}
+  \item Kleinstes Herbrand-Modell := \inlinecode{\{connection(x,y) | (x,y) $\in A$ \} $\cup$ \{direct(x,y) | (x,y) $\in A_{direkt}$ \}}
+  \begin{itemize}
+    \item $A_{direkt}$ := \inlinecode{\{(frankfurt, san\_francisco), (frankfurt, chicago), (san\_francisco, honolulu), (honolulu, maui)\}}
+    \item $A_{indirekt}$ := \inlinecode{\{(frankfurt, honolulu), (frankfurt, maui), (san\_francisco, maui)\}}
+    \item $A := A_{direkt} \cup A_{indirekt} $
+  \end{itemize}
+\end{itemize}
+
+
+\subsection*{Aufgabe 44}
+\begin{align*}
+T_P(\emptyset) &= \{female(juliet), female(petra), parent(juliet, petra), parent(juliet, paul)
+\\&\phantom{{}=1} parent(petra, harry), parent(harry, luke), parent (luke, tom)\} \\
+T_P(T_P(\emptyset)) &=  T_P(\emptyset) \cup \{ sister(petra, paul), grandmother(juliet, harry), grandmother(petra, luke) \} \\
+T_P(T_P(T_P(\emptyset))) &= T_P(T_P(\emptyset)) \cup \{aunt(petra, harry), ancestor(juliet, harry), ancestor(petra, luke)\}
+\end{align*}
+
+
+\subsection*{Aufgabe 45}
+
+
+
+
+
+\end{document}
