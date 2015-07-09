@@ -1,0 +1,62 @@
+reverse :: [a] -> L a
+reverse []       = nil
+reverse (x : xs) = app (reverse xs) (cons x nil)
+
+toList :: L a -> [a] 
+toList f  =  f  [ ] 
+ 
+nil :: L a 
+nil  =  id 
+ 
+cons :: a -> L a -> L a 
+cons x f  =  (x :) . f 
+ 
+snoc :: L a -> a -> L a 
+snoc f x  =  f . (x :) 
+ 
+app :: L a -> L a -> L a 
+app f g  =  f . g 
+
+
+    toList (reverse [1, 2])
+= {applying toList}
+    (reverse [1, 2]) []
+= {applying reverse}
+    (app (reverse [2]) (cons 1 nil)) []
+= {applying app}
+    ((reverse [2]) . (cons 1 nil)) []
+= {applying (.)}
+    (reverse [2]) ((cons 1 nil) [])
+= {applying reverse}
+    (app (reverse []) (cons 2 nil)) ((cons 1 nil) [])
+= {applying app}
+    ((reverse []) . (cons 2 nil)) ((cons 1 nil) [])
+= {aplying (.)}
+    (reverse []) ((cons 2 nil) ((cons 1 nil) []))
+= {applying reverse}
+    nil ((cons 2 nil) ((cons 1 nil) []))
+= {applying nil}
+    id ((cons 2 nil) ((cons 1 nil) []))
+= {applying id}
+    (cons 2 nil) ((cons 1 nil) [])
+= {applying cons}
+    ((2:) . nil) ((cons 1 nil) [])
+= {applying (.)}
+    (2:) (nil ((cons 1 nil) []))
+= {applying (2:)}
+    2 : (nil ((cons 1 nil) []))
+= {applying nil}
+    2 : (id ((cons 1 nil) []))
+= {applying id}
+    2 : ((cons 1 nil) [])
+= {applying cons}
+    2 : (((1:) . nil) [])
+= {applying (.)}
+    2 : ((1:) (nil []))
+= {applying nil}
+    2 : ((1:) (id []))
+= {applying id}
+    2 : ((1:) [])
+= {applying (1:)}
+    2 : (1 : [])
+=   2 : 1 : []
