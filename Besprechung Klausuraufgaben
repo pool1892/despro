@@ -1,0 +1,124 @@
+1. Notiere die einzelnen Haskell Auswertungsschritte von head(tail(f[3,4,5]h)) mit
+a)
+f :: [Int -> (Int -> Int) [Int]]
+f[] g = []
+f(x:xs)g = (g x):(f xs g)
+h :: Int -> Int
+h n = n + 1
+
+= head(tail(h 3): f[4,5]h)
+= head(f [4,5] h)
+= head((h 4): f[5]h)
+= h 4
+= 5
+
+b) Geg. folgende Definition
+fun :: Int -> Int -> Int
+fun x y | x == y = y + 1
+        | x < 4  = x
+        | otherwise = fun x ( fun (x - 1) (y + 1))
+
+        Terminiert oder nicht?
+
+        fun 2 2
+        fun 5 0
+        fun 7 1
+
+2a) Bestimmte allgemeinste Funktiontypen für die nachfolgenden Funktionsdefinitionen
+
+swap (x, y) = (y, x)
+
+elems xs = [x | x <- xs] ; Liste von a nach Liste a, Identität
+
+apply f x = f x ; (a -> b)->a->b
+
+fun x y z = y ++ [x:z]; a -> [[a]] -> [a] -> [[a]]
+
+b)
+
+Datenstruktur Baum soll drei Arten von Knoten enthalten
+Int-Blätter
+Bool Knoten mit zwei Nachfolgern
+Knoten ohne Information mit drei Nach folgern
+
+Geeigneter Datentyp in Haskell?
+
+Data Baum = Leaf Int
+            | Node1 Bool Baum Baum
+            | Node2 Baum Baum Baum
+
+
+Geben Sie für einen der Datenkonstruktoren die Typsignator an:
+
+Node1 :: Bool -> Baum -> Baum -> Baum
+
+Schreiben Sie ein Funktion mit Typ
+f:: (a->b) -> (b->c) -> a -> c:
+
+f = flip (.)
+
+oder
+
+f g h x = h (g x) oder f g h = h \circ g
+
+Programmieraufgaben:
+
+a) Schreibe Funktion takeWhile (mit Typsignatur), die als Argumente ein Prädikat und eine Liste nimmt nund als Aussage eine Liste von allen Elementen der Eingabeliste erzeugt bis vor den Punkt an dem das Prädikat zum ersten Mal nicht erüllt ist (Bsp.: takeWhile (<3)[1,2,3,4,5]=[1,2]):
+
+
+b) Welche Listen werden durch die nachfolgend angegebenen Ausdrücke spezifiziert?
+
+[2 * x | x <- [1..10], x 'mod' 2 == 0]
+
+[(x,y) | <- [1..5, y <- [1..x], x > y + 1]]
+
+c) Definieren Sie die unendliche Liste aller Quadratzahlen in Haskell
+
+A4: Aus der Vorlesung bekannte Funktionen gegeben: foldr, foldl, map, filter
+
+a) (MC) Bewerten Sie folgende Aussagen über semantische Äquivalenz:
+foldr (*) 1 == foldl (*) 1: wahr
+foldr (-) 0 = foldl (-) 0: falsch
+\forall f, k foldr f k = foldl f k: falsch
+\forall h, p, xs. \exists q. map h (filter p xs = folter q (map h xs)): falsch
+
+A5a) Beweise per Induktion \forall g, h, xs. map g (map h xs) = map (\lambdax -> g ( h x)) xs
+
+A6) Haskell Funtion replicate soll eine Liste erzeugen, die n-mal den gleich Wert enthält. Dafür ist die folgende Typsignatur der Funktion gegeben
+replicate :: Int -> a -> [a]
+Gefragt nach Funktionsdefinition
+
+Definiere ein Prolog Prädikat mit entsprechender Semantik.
+
+Prolog mehr in Klausur als in Blätter (~40%?)
+
+A7 a) Gegeben Haskell Präd:
+dropEven[] = []
+dropEven[x] = [x]
+dropEven (x:y:zs) = x:(dropEven zs)
+
+Definiere Prolog Prädikat hierfür.
+
+b) Gegeben Datenbank symmetrischer Fakten über verschiedene Punkte und (echte) Strecken in der Ebene... wie in Übungsaufgabe.
+
+Nach DCD war Schluss, Prädikate danach nicht mehr behandelt, nicht relevant
+
+A8) Stelle für jedes Paar von Termen (ohne occurs checks) fest, ob sie unifizierbar sind und wenn ja, geben Sie einen allgemeinsten Unifikator an.
+
+1. f(s(s(X)), b, Y) und f(s(Y), X, s(a)), geht nicht
+2. p(Z, f(Y, Z), U) und p(2, f(U, V), g(X)) kann unifiziert werden mit Z/2, Y/g(X), V/2, U/g(X)
+3. g(X, U, X), g(f(U), f(Z), f(f(Y)))
+
+A9) Entwickle für gegebenes Programm (female, parent, grandma, ancestor...) einen Prolog Auswertungsbaum, samt annotierten Variablenbelegungen bis zum Finden der ersten beiden (deutlich markierten) Lösungen ?- ancestor(A,P).
+
+A10) Gegebn Prolog Programm, Geben sie all Ergebniss des Programms für folgende Anfragen in der Reihenfolge an  in der sie auch von Prolog generiert werden (insert things)
+
+A11) Gegeben wieder Programm. a) Geben Sie das Herbrand Universum HU und 6 Elemente der Herbrand Basis HB an.
+b) Berechnen Sie die ersten drei Iterationen des Immediate Consequence Operators: T_p (\emptyset)...
+
+A12) a) Gegeben Funktion zur Erkennung eines Zeichens in Haskell sowie ein Parser aufbauend auf Haskell Parserkombinatoren. Realisieren Sie mittels Definite Clause Grammars in Prolog anaaloge Parser.
+b) Schreibe in Haskell oder Prolog eine Funktion/Prädikat zur Erkennung genau der Zeichenketten in denen nur gleich viele a und b vorkommen.
+
+A13) Entwickle für ein Programm einen Prolog Auswertungsbaum in dem Sie die Auswirkungen der Negation undes Cut kenntlich machen ausgeben von Anfrage. (Gestrichelter Pfeil bei Negation usw.)
+
+A14) Multiple Choice allg. theor. Fragen zu Prolog. Bspw. Verwendung von Negation kann immer durch Verwendung von Cut erzsetzt werden (stimmt).
