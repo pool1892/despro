@@ -6,11 +6,6 @@ f(x:xs)g = (g x):(f xs g)
 h :: Int -> Int
 h n = n + 1
 
-= head(tail(h 3): f[4,5]h)
-= head(f [4,5] h)
-= head((h 4): f[5]h)
-= h 4
-= 5
 
 b) Geg. folgende Definition
 fun :: Int -> Int -> Int
@@ -28,11 +23,11 @@ fun x y | x == y = y + 1
 
 swap (x, y) = (y, x)
 
-elems xs = [x | x <- xs] ; Liste von a nach Liste a, Identität
+elems xs = [x | x <- xs]
 
-apply f x = f x ; (a -> b)->a->b
+apply f x = f x
 
-fun x y z = y ++ [x:z]; a -> [[a]] -> [a] -> [[a]]
+fun x y z = y ++ [x:z]
 
 b)
 
@@ -41,25 +36,15 @@ Int-Blätter
 Bool Knoten mit zwei Nachfolgern
 Knoten ohne Information mit drei Nach folgern
 
-Geeigneter Datentyp in Haskell?
+1. Geeigneter Datentyp in Haskell?
 
-Data Baum = Leaf Int
-            | Node1 Bool Baum Baum
-            | Node2 Baum Baum Baum
+2. Geben Sie für einen der Datenkonstruktoren die Typsignator an:
 
-
-Geben Sie für einen der Datenkonstruktoren die Typsignator an:
-
-Node1 :: Bool -> Baum -> Baum -> Baum
-
-Schreiben Sie ein Funktion mit Typ
+3. Schreiben Sie ein Funktion mit Typ
 f:: (a->b) -> (b->c) -> a -> c:
 
-f = flip (.)
 
-oder
-
-f g h x = h (g x) oder f g h = h \circ g
+=======
 
 Programmieraufgaben:
 
@@ -74,15 +59,17 @@ b) Welche Listen werden durch die nachfolgend angegebenen Ausdrücke spezifizier
 
 c) Definieren Sie die unendliche Liste aller Quadratzahlen in Haskell
 
+
 A4: Aus der Vorlesung bekannte Funktionen gegeben: foldr, foldl, map, filter
 
 a) (MC) Bewerten Sie folgende Aussagen über semantische Äquivalenz:
-foldr (*) 1 == foldl (*) 1: wahr
-foldr (-) 0 = foldl (-) 0: falsch
-\forall f, k foldr f k = foldl f k: falsch
-\forall h, p, xs. \exists q. map h (filter p xs = folter q (map h xs)): falsch
+foldr (*) 1 == foldl (*) 1
+foldr (-) 0 = foldl (-) 0
+\forall f, k foldr f k = foldl f k
+\forall h, p, xs. \exists q. map h (filter p xs = folter q (map h xs))
 
-A5a) Beweise per Induktion \forall g, h, xs. map g (map h xs) = map (\lambdax -> g ( h x)) xs
+A5a) Beweise per Induktion
+\forall g, h, xs. map g (map h xs) = map (\lambdax -> g ( h x)) xs
 
 A6) Haskell Funtion replicate soll eine Liste erzeugen, die n-mal den gleich Wert enthält. Dafür ist die folgende Typsignatur der Funktion gegeben
 replicate :: Int -> a -> [a]
