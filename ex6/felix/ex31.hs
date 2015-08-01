@@ -8,10 +8,22 @@ import Test.QuickCheck
  - Kleinbuchstaben (des englischen Alphabets) bestehen.
  -}
 
+test x _ y = if x==y then yield () else failure
+
 palindrome :: Parser ()
-palindrome = pure () ||| \x -> (char x *> palindrome x <* char x ) <$> ['a'..'z']
+palindrome = yield () |||
+             item +++ yield () |||
+             test <$> lower *> palindrome <* lower
 
 
+{-
+palindrome = yield () |||
+             item +++ yield () |||
+             do x <- item
+                palindrome
+                y <- item
+                satP (x==y)
+-}
 
 {- Beachten Sie dass die Verwendung von ++> ausgeschlossen ist, ebenso die
  - Verwendung von do-Notation oder >>= und return!
@@ -40,5 +52,6 @@ invalidInputs = do n <- growingElements [2..100]
 
 
 main = do
+  print $ parse palindrome "a"
   quickCheck test1
-  quickCheck test2
+  -- quickCheck test2
