@@ -67,7 +67,10 @@ a) Schreibe Funktion takeWhile (mit Typsignatur), die als Argumente ein Prädika
 
 
 takeWhile :: (a -> Bool) -> [a] -> [a]
-takeWhile p (x:xs) = if p x then x:takeWhile p xs else []
+takeWhile _ []          =  []
+takeWhile p (x:xs)
+            | p x       =  x : takeWhile p xs
+            | otherwise =  []
 
 
 b) Welche Listen werden durch die nachfolgend angegebenen Ausdrücke spezifiziert?
@@ -90,13 +93,26 @@ foldr (-) 0 = foldl (-) 0: falsch
 \forall f, k foldr f k = foldl f k: falsch
 \forall h, p, xs. \exists q. map h (filter p xs = folter q (map h xs)): falsch
 
+
 A5a) Beweise per Induktion \forall g, h, xs. map g (map h xs) = map (\lambdax -> g ( h x)) xs
+
+
+
+
+
 
 A6) Haskell Funtion replicate soll eine Liste erzeugen, die n-mal den gleich Wert enthält. Dafür ist die folgende Typsignatur der Funktion gegeben
 replicate :: Int -> a -> [a]
 Gefragt nach Funktionsdefinition
+replicate n x =  take n (repeat x)
+
+
 
 Definiere ein Prolog Prädikat mit entsprechender Semantik.
+
+replicate(0,_,[]).
+replicate(s(A),X, [X|T]) :- replicate(A, X, T).
+
 
 Prolog mehr in Klausur als in Blätter (~40%?)
 
