@@ -123,7 +123,13 @@ dropEven (x:y:zs) = x:(dropEven zs)
 
 Definiere Prolog Prädikat hierfür.
 
+dropEven([],[]).
+dropEven([A|[]],[A]).
+dropEven([A,_|T],[A|Res]) :- dropEven(T,Res).
+
+
 b) Gegeben Datenbank symmetrischer Fakten über verschiedene Punkte und (echte) Strecken in der Ebene... wie in Übungsaufgabe.
+
 
 Nach DCD war Schluss, Prädikate danach nicht mehr behandelt, nicht relevant
 
